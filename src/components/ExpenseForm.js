@@ -13,6 +13,7 @@ class ExpenseForm extends Component {
   handleAddIncome() {
     const roundedAmount = Math.round(parseFloat(this.refs['amount'].value) * 100.0) / 100.0;
     this.props.handleAddRecord({
+      details: this.refs['details'].value,
       amount: roundedAmount,
       currency: this.refs['currency'].value,
       categoryUuid: this.refs['categoryUuid'].value,
@@ -23,6 +24,7 @@ class ExpenseForm extends Component {
   handleAddOutcome() {
     const roundedAmount = Math.round(parseFloat(this.refs['amount'].value) * 100.0) / 100.0;
     this.props.handleAddRecord({
+      details: this.refs['details'].value,
       amount: roundedAmount,
       currency: this.refs['currency'].value,
       categoryUuid: this.refs['categoryUuid'].value,
@@ -36,12 +38,23 @@ class ExpenseForm extends Component {
       <section>
         <div>
           <label htmlFor='amount'>Amount</label>
+          <br />
           <input
             type='number'
             ref='amount'
             defaultValue={0.0}
             step='any'
+            id='amount'
             name='amount' />
+        </div>
+        <div>
+          <label htmlFor='details'>Details</label>
+          <br />
+          <input
+            type='text'
+            ref='details'
+            id='details'
+            name='details' />
         </div>
         <div>
           <select defaultValue={categories[0].uuid}

@@ -32,17 +32,19 @@ class Record {
   constructAsObject(object) {
     const defaultAttributes = {
       createdAt: (new Date()).toString(),
+      details: '',
       currency: 'HKD', // ISO 4217 currency code
       amount: 0.0,
       mode: this.OUTCOME,
       uuid: guid()
     };
 
-    const {uuid, mode, amount, currency, createdAt} = Object.assign(
+    const {uuid, mode, details, amount, currency, createdAt} = Object.assign(
       defaultAttributes, object
     );
 
     this.createdAt = createdAt;
+    this.details = details;
     this.currency = currency;
     this.amount = amount;
     this.mode = mode;
@@ -53,6 +55,7 @@ class Record {
     return {
       createdAt: this.createdAt,
       currency: this.currency,
+      details: this.details,
       amount: this.amount,
       mode: this.mode,
       uuid: this.uuid,

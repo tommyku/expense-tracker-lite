@@ -37,9 +37,10 @@ function expenseAppLite(state = initialState, action) {
   }
 }
 
-function handleAddNewRecord(state, {amount, currency, mode, categoryUuid}) {
+function handleAddNewRecord(state, {amount, currency, details, mode, categoryUuid}) {
   const newState = Object.assign({}, state);
   const newRecord = new Record({
+    details: details,
     amount: amount,
     currency: currency,
     mode: mode
