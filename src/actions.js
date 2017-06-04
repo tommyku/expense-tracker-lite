@@ -44,8 +44,8 @@ export function initHoodie({host, user, pass}) {
 export function receiveRecords(status, payload) {
   return {
     type: RECEIVE_RECORDS,
-    payload: payload,
-    status: status,
+    payload,
+    status,
   }
 }
 
@@ -99,11 +99,11 @@ export function fetchRecords(hoodie) {
 export function addNewRecord({amount, currency, details, mode, categoryUuid}) {
   return function(dispatch, getState) {
     const newRecord = new Record({
-      details: details,
-      amount: amount,
-      currency: currency,
-      mode: mode,
-      categoryUuid: categoryUuid
+      details,
+      amount,
+      currency,
+      mode,
+      categoryUuid
     });
 
     const state = Object.assign({}, getState());
