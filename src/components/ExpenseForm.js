@@ -74,6 +74,7 @@ class ExpenseForm extends Component {
           <input
             type='text'
             ref='details'
+            autoCapitalize={false}
             id='details'
             name='details' />
         </div>
