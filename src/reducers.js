@@ -1,5 +1,5 @@
 import { Record, Category } from './data'
-import { NEW_RECORD } from './actions'
+import { RECEIVE_RECORDS, SET_HOODIE } from './actions'
 
 const defaultCategories = [
   new Category({name: 'Transportation'}),
@@ -29,32 +29,58 @@ const initialState = {
     records: []
   },
   categories: defaultCategoriesObject,
-  records: {}
+  records: {},
+  hoodie: null
 };
 
 function expenseAppLite(state = initialState, action) {
-  console.log(state, action);
   switch (action.type) {
-    case NEW_RECORD:
-      return handleAddNewRecord(state, action.payload);
+    case RECEIVE_RECORDS:
+      return handleReceiveRecords(state, action.status, action.payload);
+    case SET_HOODIE:
+      return Object.assign({}, state, {hoodie: action.hoodie});
     default:
       return state;
   }
 }
 
-function handleAddNewRecord(state, {amount, currency, details, mode, categoryUuid}) {
-  const newState = Object.assign({}, state);
-  const newRecord = new Record({
-    details: details,
-    amount: amount,
-    currency: currency,
-    mode: mode,
-    categoryUuid: categoryUuid
-  });
-  newState.records[newRecord.uuid] = newRecord;
-  newState.indices.records.push(newRecord.uuid);
-  newState.indices.categories[categoryUuid].push(newRecord.uuid);
-  return newState;
+function handleReceiveRecords(state, status, payload) {
+  switch (status) {
+    case 'success':
+      let newState = Object.assign({}, state);
+      payload.forEach((object)=> newState = handleRecordsPayload(newState, object));
+      return newState;
+    default:
+      return state;
+  }
+}
+
+function handleRecordsPayload(state, object) {
+  const uuidRegexp = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+  switch (object._id) {
+    case 'expense:indices':
+      state.indices = object;
+      break;
+    case 'expense:records':
+      state.records = {};
+      Object.keys(object).forEach((key)=> {
+        if (key.match(uuidRegexp)) {
+          state.records[key] = new Record(object[key]);
+        }
+      })
+      break;
+    case 'expense:categories':
+      state.categories = {};
+      Object.keys(object).forEach((key)=> {
+        if (key.match(uuidRegexp)) {
+          state.categories[key] = new Category(object[key]);
+        }
+      })
+      break;
+    default:
+      // do nothing
+  }
+  return state;
 }
 
 export default expenseAppLite;

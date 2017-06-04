@@ -10,6 +10,15 @@ class ExpenseForm extends Component {
     this.handleAddOutcome = this.handleAddOutcome.bind(this);
   }
 
+  componentWillMount() {
+    const host = localStorage.getItem('expenseHoodieHost');
+    const user = localStorage.getItem('expenseHoodieUser');
+    const pass = localStorage.getItem('expenseHoodiePass');
+    if (host && user && pass) {
+      this.props.handleInitHoodie({host: host, user: user, pass: pass});
+    }
+  }
+
   handleAddIncome() {
     const roundedAmount = Math.round(parseFloat(this.refs['amount'].value) * 100.0) / 100.0;
     if (roundedAmount !== 0.0) {
@@ -102,7 +111,9 @@ class ExpenseForm extends Component {
 
 ExpenseForm.propTypes = {
   categories: PropTypes.object.isRequired,
-  handleAddRecord: PropTypes.func.isRequired
+  handleAddRecord: PropTypes.func.isRequired,
+  handleFetchRecords: PropTypes.func.isRequired,
+  handleInitHoodie: PropTypes.func.isRequired
 }
 
 export default ExpenseForm;

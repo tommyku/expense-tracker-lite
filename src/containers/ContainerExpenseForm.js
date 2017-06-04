@@ -1,18 +1,24 @@
 import ExpenseForm from '../components/ExpenseForm'
-import { NEW_RECORD } from '../actions';
+import { initHoodie, addNewRecord, fetchRecords } from '../actions';
 import { connect } from 'react-redux'
 
-const mapStateToProps = ({categories})=> {
-  return { categories: categories };
+const mapStateToProps = ({categories, hoodie})=> {
+  return {
+    categories: categories,
+    hoodie: hoodie
+  };
 }
 
 const mapDispatchToProps = (dispatch)=> {
   return {
     handleAddRecord: (payload)=> {
-      dispatch({
-        type: NEW_RECORD,
-        payload: payload
-      });
+      dispatch(addNewRecord(payload));
+    },
+    handleInitHoodie: (payload)=> {
+      dispatch(initHoodie(payload))
+    },
+    handleFetchRecords: (hoodie)=> {
+      dispatch(fetchRecords(hoodie));
     }
   }
 };

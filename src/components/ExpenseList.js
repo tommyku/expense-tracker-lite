@@ -13,7 +13,7 @@ class ExpenseList extends PureComponent {
             <div>
               {`
                 You ${item.mode === Record.INCOME ? 'earned' : 'spent'}
-                ${item.currency}$${item.amount} on ${categories[item.categoryUuid].name}
+                ${item.amount.toLocaleString('zh-HK', {style: 'currency', currency: item.currency})} on ${categories[item.categoryUuid].name}
                 ${timeago().format(item.createdAt)}${item.details.length ? ' for '+item.details : ''}.
               `}
             </div>
