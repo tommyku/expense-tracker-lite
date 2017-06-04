@@ -1,5 +1,5 @@
 import { Record, Category } from './data'
-import { RECEIVE_RECORDS, SET_HOODIE } from './actions'
+import { RECEIVE_RECORDS, SET_HOODIE, RECEIVE_DOCS } from './actions'
 
 const defaultCategories = [
   new Category({name: 'Transportation'}),
@@ -39,6 +39,8 @@ function expenseAppLite(state = initialState, action) {
       return handleReceiveRecords(state, action.status, action.payload);
     case SET_HOODIE:
       return Object.assign({}, state, {hoodie: action.hoodie});
+    case RECEIVE_DOCS:
+      return Object.assign({}, handleRecordsPayload(state, action.payload));
     default:
       return state;
   }

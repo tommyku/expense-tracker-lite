@@ -18,7 +18,13 @@ export function initHoodie({host, user, pass}) {
       PouchDB: require('pouchdb-browser')
     });
     dispatch({type: SET_HOODIE, hoodie: hoodie});
+
+    hoodie.store.on('change', (event, object)=> {
+      dispatch(receiveDocs(object));
+    });
+
     return hoodie.account.get('session').then((session)=> {
+      //hoodie.store.remove(['expense:categories', 'expense:indices', 'expense:records']);
       if (session) {
         dispatch(fetchRecords(hoodie));
       } else {
@@ -27,9 +33,7 @@ export function initHoodie({host, user, pass}) {
           dispatch({type: SET_HOODIE, hoodie: hoodie});
           localStorage.removeItem('expenseHoodieUser');
           localStorage.removeItem('expenseHoodiePass');
-          //hoodie.store.remove(['expense:categories', 'expense:indices', 'expense:records']).then(()=> {
           dispatch(fetchRecords(hoodie));
-          //});
         })
         .catch(console.warn);
       }
@@ -103,8 +107,6 @@ export function addNewRecord({amount, currency, details, mode, categoryUuid}) {
     });
 
     const state = Object.assign({}, getState());
-
-    console.log(state);
 
     state.records[newRecord.uuid] = newRecord;
     state.indices.records.push(newRecord.uuid);
