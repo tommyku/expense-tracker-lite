@@ -9,15 +9,26 @@ import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import './index.css';
 
-const loggerMiddleware = createLogger();
+let store;
 
-const store = createStore(
-  expenseAppLite,
-  applyMiddleware(
-    thunkMiddleware,
-    loggerMiddleware
-  )
-);
+switch (process.env.NODE_ENV) {
+  case 'development':
+    store = createStore(
+      expenseAppLite,
+      applyMiddleware(
+        thunkMiddleware,
+        createLogger()
+      )
+    );
+    break;
+  default:
+    store = createStore(
+      expenseAppLite,
+      applyMiddleware(
+        thunkMiddleware,
+      )
+    );
+}
 
 ReactDOM.render(
   <Provider store={store}>

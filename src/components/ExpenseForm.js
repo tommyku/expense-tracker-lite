@@ -21,7 +21,7 @@ class ExpenseForm extends Component {
 
   handleAddIncome() {
     const roundedAmount = Math.round(parseFloat(this.refs['amount'].value) * 100.0) / 100.0;
-    if (roundedAmount !== 0.0) {
+    if (!isNaN(roundedAmount) && roundedAmount !== 0.0) {
       this.props.handleAddRecord({
         details: this.refs['details'].value,
         amount: roundedAmount,
@@ -33,12 +33,12 @@ class ExpenseForm extends Component {
       this.refs['amount'].value = '';
     }
     else
-      alert('buy why zero amount?');
+      alert('buy why not a proper amount?');
   }
 
   handleAddOutcome() {
     const roundedAmount = Math.round(parseFloat(this.refs['amount'].value) * 100.0) / 100.0;
-    if (roundedAmount !== 0.0) {
+    if (!isNaN(roundedAmount) && roundedAmount !== 0.0) {
       this.props.handleAddRecord({
         details: this.refs['details'].value,
         amount: roundedAmount,
@@ -50,7 +50,7 @@ class ExpenseForm extends Component {
       this.refs['amount'].value = '';
     }
     else
-      alert('buy why zero amount?');
+      alert('buy why not a proper amount?');
   }
 
   render() {
