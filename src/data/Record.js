@@ -36,10 +36,11 @@ class Record {
       currency: 'HKD', // ISO 4217 currency code
       amount: 0.0,
       mode: this.OUTCOME,
-      uuid: guid()
+      uuid: guid(),
+      categoryUuid: ''
     };
 
-    const {uuid, mode, details, amount, currency, createdAt} = Object.assign(
+    const {uuid, mode, details, amount, currency, createdAt, categoryUuid} = Object.assign(
       defaultAttributes, object
     );
 
@@ -49,6 +50,7 @@ class Record {
     this.amount = amount;
     this.mode = mode;
     this.uuid = uuid;
+    this.categoryUuid = categoryUuid;
   }
 
   serialize() {
@@ -59,6 +61,7 @@ class Record {
       amount: this.amount,
       mode: this.mode,
       uuid: this.uuid,
+      categoryUuid: this.categoryUuid,
     };
   }
 }

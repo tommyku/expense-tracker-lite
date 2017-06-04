@@ -12,24 +12,36 @@ class ExpenseForm extends Component {
 
   handleAddIncome() {
     const roundedAmount = Math.round(parseFloat(this.refs['amount'].value) * 100.0) / 100.0;
-    this.props.handleAddRecord({
-      details: this.refs['details'].value,
-      amount: roundedAmount,
-      currency: this.refs['currency'].value,
-      categoryUuid: this.refs['categoryUuid'].value,
-      mode: Record.INCOME
-    });
+    if (roundedAmount !== 0.0) {
+      this.props.handleAddRecord({
+        details: this.refs['details'].value,
+        amount: roundedAmount,
+        currency: this.refs['currency'].value,
+        categoryUuid: this.refs['categoryUuid'].value,
+        mode: Record.INCOME
+      });
+      this.refs['details'].value = '';
+      this.refs['amount'].value = '';
+    }
+    else
+      alert('buy why zero amount?');
   }
 
   handleAddOutcome() {
     const roundedAmount = Math.round(parseFloat(this.refs['amount'].value) * 100.0) / 100.0;
-    this.props.handleAddRecord({
-      details: this.refs['details'].value,
-      amount: roundedAmount,
-      currency: this.refs['currency'].value,
-      categoryUuid: this.refs['categoryUuid'].value,
-      mode: Record.OUTCOME
-    });
+    if (roundedAmount !== 0.0) {
+      this.props.handleAddRecord({
+        details: this.refs['details'].value,
+        amount: roundedAmount,
+        currency: this.refs['currency'].value,
+        categoryUuid: this.refs['categoryUuid'].value,
+        mode: Record.OUTCOME
+      });
+      this.refs['details'].value = '';
+      this.refs['amount'].value = '';
+    }
+    else
+      alert('buy why zero amount?');
   }
 
   render() {
@@ -42,7 +54,7 @@ class ExpenseForm extends Component {
           <input
             type='number'
             ref='amount'
-            defaultValue={0.0}
+            defaultValue=''
             step='any'
             id='amount'
             name='amount' />
@@ -57,10 +69,9 @@ class ExpenseForm extends Component {
             name='details' />
         </div>
         <div>
-          <select defaultValue={categories[0].uuid}
-            ref='categoryUuid'>
-            { categories.map((item, index)=> (
-              <option value={item.uuid} key={`category-${index}`}>{item.name}</option>
+          <select ref='categoryUuid'>
+            { Object.keys(categories).map((key, index)=> (
+              <option value={categories[key].uuid} key={`category-${index}`}>{categories[key].name}</option>
             )) }
           </select>
         </div>
@@ -90,12 +101,7 @@ class ExpenseForm extends Component {
 }
 
 ExpenseForm.propTypes = {
-  categories: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      uuid: PropTypes.string.isRequired
-    })
-  ),
+  categories: PropTypes.object.isRequired,
   handleAddRecord: PropTypes.func.isRequired
 }
 

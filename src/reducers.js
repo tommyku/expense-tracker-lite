@@ -13,6 +13,11 @@ const defaultCategories = [
   new Category({name: 'Reimbursement'}),
 ];
 
+const defaultCategoriesObject = defaultCategories.reduce((sum, item)=> {
+  sum[item.uuid] = item;
+  return sum;
+}, {});
+
 const categoryIndices = defaultCategories.reduce((sum, item)=> {
   sum[item.uuid] = []
   return sum
@@ -23,7 +28,7 @@ const initialState = {
     categories: categoryIndices,
     records: []
   },
-  categories: defaultCategories,
+  categories: defaultCategoriesObject,
   records: {}
 };
 
@@ -43,7 +48,8 @@ function handleAddNewRecord(state, {amount, currency, details, mode, categoryUui
     details: details,
     amount: amount,
     currency: currency,
-    mode: mode
+    mode: mode,
+    categoryUuid: categoryUuid
   });
   newState.records[newRecord.uuid] = newRecord;
   newState.indices.records.push(newRecord.uuid);

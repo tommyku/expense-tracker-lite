@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { ContainerExpenseForm } from './containers';
+import { ContainerExpenseForm, ContainerExpenseList } from './containers';
 
 class App extends Component {
   render() {
     return (
       <div>
         <ContainerExpenseForm />
+        <ContainerExpenseList />
       </div>
     );
   }
