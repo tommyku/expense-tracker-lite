@@ -20,11 +20,13 @@ export function initHoodie({host, user, pass}) {
     dispatch({type: SET_HOODIE, hoodie: hoodie});
 
     hoodie.store.on('change', (event, object)=> {
-      dispatch(receiveDocs(object));
+      if (event !== 'remove' && event !== 'update') {
+        dispatch(receiveDocs(object));
+      }
     });
 
     return hoodie.account.get('session').then((session)=> {
-      //hoodie.store.remove(['expense:categories', 'expense:indices', 'expense:records']);
+      //hoodie.store.remove(['expense:categories', 'expense:indices', 'expense:records']).then(console.log);
       if (session) {
         dispatch(fetchRecords(hoodie));
       } else {
@@ -74,7 +76,7 @@ export function initDoc(hoodie, id) {
     }
 
     return hoodie.store.updateOrAdd(Object.assign({_id: id}, objectToInit))
-      .then((object)=> dispatch(fetchRecords(hoodie)))
+      .then((object)=> dispatch(receiveDocs(object)))
       .catch(console.warn);
   }
 }
