@@ -2,15 +2,15 @@ import { Record, Category } from './data'
 import { NEW_RECORD } from './actions'
 
 const defaultCategories = [
-  new Category('Transportation'),
-  new Category('Food'),
-  new Category('Snack'),
-  new Category('Administration'),
-  new Category('Interest'),
-  new Category('Home Deposit'),
-  new Category('Wage'),
-  new Category('Lend/Borrow'),
-  new Category('Reimbursement'),
+  new Category({name: 'Transportation'}),
+  new Category({name: 'Food'}),
+  new Category({name: 'Snack'}),
+  new Category({name: 'Administration'}),
+  new Category({name: 'Interest'}),
+  new Category({name: 'Home Deposit'}),
+  new Category({name: 'Wage'}),
+  new Category({name: 'Lend/Borrow'}),
+  new Category({name: 'Reimbursement'}),
 ];
 
 const categoryIndices = defaultCategories.reduce((sum, item)=> {
@@ -24,7 +24,7 @@ const initialState = {
     records: []
   },
   categories: defaultCategories,
-  records: []
+  records: {}
 };
 
 function expenseAppLite(state = initialState, action) {

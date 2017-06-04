@@ -1,5 +1,8 @@
 import {v4 as guid} from 'uuid';
 
+const INCOME = 'in',
+      OUTCOME = 'out';
+
 class Record {
   constructor(arg) {
     switch (typeof arg) {
@@ -14,6 +17,14 @@ class Record {
     }
   }
 
+  static get INCOME() {
+    return INCOME;
+  }
+
+  static get OUTCOME() {
+    return OUTCOME;
+  }
+
   constructAsRecord(record) {
     this.constructAsObject(record.serialize());
   }
@@ -23,7 +34,7 @@ class Record {
       createdAt: (new Date()).toString(),
       currency: 'HKD', // ISO 4217 currency code
       amount: 0.0,
-      mode: this.MODES.OUTCOME,
+      mode: this.OUTCOME,
       uuid: guid()
     };
 
@@ -47,11 +58,6 @@ class Record {
       uuid: this.uuid,
     };
   }
-}
-
-Record.prototype.MODES = {
-  INCOME: 'in',
-  OUTCOME: 'out'
 }
 
 export default Record;
