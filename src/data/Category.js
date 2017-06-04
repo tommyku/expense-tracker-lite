@@ -18,9 +18,9 @@ class Category {
     this.constructAsObject(category.serialize());
   }
 
-  constructAsObject({name, uuid}) {
+  constructAsObject({name = null, uuid = null}) {
     this.name = name;
-    this.uuid = uuid;
+    this.uuid = uuid || guid();
   }
 
   serialize() {
