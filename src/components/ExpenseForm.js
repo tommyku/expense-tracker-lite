@@ -14,7 +14,7 @@ class ExpenseForm extends Component {
     const host = localStorage.getItem('expenseHoodieHost');
     const user = localStorage.getItem('expenseHoodieUser');
     const pass = localStorage.getItem('expenseHoodiePass');
-    if (host && user && pass) {
+    if (host) {
       this.props.handleInitHoodie({host: host, user: user, pass: pass});
     }
   }

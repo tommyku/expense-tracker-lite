@@ -17,14 +17,23 @@ export function initHoodie({host, user, pass}) {
       url: host,
       PouchDB: require('pouchdb-browser')
     });
-    return hoodie.account.signIn({username: user, password: pass})
-      .then((account)=> {
-        dispatch({type: SET_HOODIE, hoodie: hoodie});
-        //hoodie.store.remove(['expense:categories', 'expense:indices', 'expense:records']).then(()=> {
+    dispatch({type: SET_HOODIE, hoodie: hoodie});
+    return hoodie.account.get('session').then((session)=> {
+      if (session) {
         dispatch(fetchRecords(hoodie));
-        //});
-      })
-      .catch(console.warn);
+      } else {
+        hoodie.account.signIn({username: user, password: pass})
+        .then((account)=> {
+          dispatch({type: SET_HOODIE, hoodie: hoodie});
+          localStorage.removeItem('expenseHoodieUser');
+          localStorage.removeItem('expenseHoodiePass');
+          //hoodie.store.remove(['expense:categories', 'expense:indices', 'expense:records']).then(()=> {
+          dispatch(fetchRecords(hoodie));
+          //});
+        })
+        .catch(console.warn);
+      }
+    });
   }
 }
 
