@@ -7,6 +7,7 @@ import thunkMiddleware from 'redux-thunk'
 import { createLogger } from 'redux-logger'
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
+import 'react-virtualized/styles.css';
 import './index.css';
 
 let store;
