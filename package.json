@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@hoodie/client": "^10.0.2",
+    "office-ui-fabric-react": "^4.3.0",
     "pouchdb-browser": "^6.2.0",
     "prop-types": "^15.5.10",
     "react": "^15.5.4",

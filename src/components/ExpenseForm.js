@@ -1,11 +1,44 @@
 import React, { Component } from 'react';
 import { Record } from '../data';
+import { Button, PrimaryButton } from 'office-ui-fabric-react/lib/Button';
+import { Dropdown } from 'office-ui-fabric-react/lib/Dropdown';
+import { TextField } from 'office-ui-fabric-react/lib/TextField';
 import PropTypes from 'prop-types';
+
+const ButtonStyle = {
+  margin: '.5em',
+};
+
+const FormField = (props)=> {
+  const { style, ...others } = props;
+  const FormFieldStyle = Object.assign(style || {}, {
+    marginBottom: '1em',
+    display: 'block',
+  });
+
+  return (
+    <div style={FormFieldStyle} {...others}>
+      {props.children}
+    </div>
+  );
+};
+
+const DEFAULT_CURRENCY = 'HKD';
 
 class ExpenseForm extends Component {
   constructor(props) {
     super(props);
-
+    const firstCategoryKey = Object.keys(this.props.categories)[0];
+    const firstCategory = {
+      key: this.props.categories[firstCategoryKey].uuid,
+      text: this.props.categories[firstCategoryKey].name,
+    };
+    this.state = {
+      currency: {key: DEFAULT_CURRENCY, text: DEFAULT_CURRENCY},
+      category: firstCategory,
+      amount: '',
+      details: ''
+    };
     this.handleAddIncome = this.handleAddIncome.bind(this);
     this.handleAddOutcome = this.handleAddOutcome.bind(this);
   }
@@ -20,34 +53,38 @@ class ExpenseForm extends Component {
   }
 
   handleAddIncome() {
-    const roundedAmount = Math.round(parseFloat(this.refs['amount'].value) * 100.0) / 100.0;
+    const roundedAmount = Math.round(parseFloat(this.state.amount) * 100.0) / 100.0;
     if (!isNaN(roundedAmount) && roundedAmount !== 0.0) {
       this.props.handleAddRecord({
-        details: this.refs['details'].value,
+        details: this.state.details,
         amount: roundedAmount,
-        currency: this.refs['currency'].value,
-        categoryUuid: this.refs['categoryUuid'].value,
+        currency: this.currency.key,
+        categoryUuid: this.category.key,
         mode: Record.INCOME
       });
-      this.refs['details'].value = '';
-      this.refs['amount'].value = '';
+      this.setState({
+        details: '',
+        amount: ''
+      });
     }
     else
       alert('buy why not a proper amount?');
   }
 
   handleAddOutcome() {
-    const roundedAmount = Math.round(parseFloat(this.refs['amount'].value) * 100.0) / 100.0;
+    const roundedAmount = Math.round(parseFloat(this.state.amount) * 100.0) / 100.0;
     if (!isNaN(roundedAmount) && roundedAmount !== 0.0) {
       this.props.handleAddRecord({
-        details: this.refs['details'].value,
+        details: this.state.details,
         amount: roundedAmount,
-        currency: this.refs['currency'].value,
-        categoryUuid: this.refs['categoryUuid'].value,
+        currency: this.state.currency.key,
+        categoryUuid: this.state.category.key,
         mode: Record.OUTCOME
       });
-      this.refs['details'].value = '';
-      this.refs['amount'].value = '';
+      this.setState({
+        details: '',
+        amount: ''
+      });
     }
     else
       alert('buy why not a proper amount?');
@@ -57,54 +94,58 @@ class ExpenseForm extends Component {
     const { categories } = this.props;
     return (
       <section>
-        <div>
-          <label htmlFor='amount'>Amount</label>
-          <br />
-          <input
+        <FormField>
+          <TextField
             type='number'
-            ref='amount'
-            defaultValue=''
+            label='Amount'
             step='any'
-            id='amount'
-            name='amount' />
-        </div>
-        <div>
-          <label htmlFor='details'>Details</label>
-          <br />
-          <input
+            value={this.state.amount}
+            onChanged={(amount)=> this.setState({amount})}
+          />
+        </FormField>
+        <FormField>
+          <TextField
             type='text'
-            ref='details'
+            label='Details (Optional)'
             autoCapitalize={false}
-            id='details'
-            name='details' />
-        </div>
-        <div>
-          <select ref='categoryUuid'>
-            { Object.keys(categories).map((key, index)=> (
-              <option value={categories[key].uuid} key={`category-${index}`}>{categories[key].name}</option>
-            )) }
-          </select>
-        </div>
-        <div>
-          <select defaultValue='HKD'
-            ref='currency'>
-            { ['HKD', 'USD', 'JPY', 'RMB', 'TWD'].map((item, index)=> (
-              <option value={item} key={`currency-${index}`}>{item}</option>
-            )) }
-          </select>
-        </div>
-        <div>
-          <button
-            onClick={this.handleAddIncome}
-            type='button'>
-            IN
-          </button>
-          <button
+            value={this.state.details}
+            onChanged={(details)=> this.setState({details})}
+          />
+        </FormField>
+        <FormField>
+          <Dropdown
+            label='Category'
+            onChanged={(category)=> this.setState({category})}
+            defaultSelectedKey={this.state.category.key}
+            options={Object.keys(categories).map((key)=> {
+              return {key: categories[key].uuid, text: categories[key].name};
+            })}
+          />
+        </FormField>
+        <FormField>
+          <Dropdown
+            label='Currency'
+            onChanged={(currency)=> this.setState({currency})}
+            defaultSelectedKey={this.state.currency.key}
+            options={['HKD', 'USD', 'JPY', 'RMB', 'TWD'].map((item, index)=> {
+              return {key: item, text: item};
+            })}
+          />
+        </FormField>
+        <FormField style={{textAlign: 'center'}}>
+          <PrimaryButton
+            style={ButtonStyle}
             onClick={this.handleAddOutcome}
             type='button'>
-            OUT
-          </button>
-        </div>
+            Add Outcome
+          </PrimaryButton>
+          <Button
+            style={ButtonStyle}
+            onClick={this.handleAddIncome}
+            type='button'>
+            Add Income
+          </Button>
+        </FormField>
       </section>
     );
   }
