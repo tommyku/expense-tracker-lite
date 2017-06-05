@@ -17,7 +17,7 @@ class ExpenseList extends PureComponent {
                 scrollTop={scrollTop}
                 height={height}
                 rowCount={records.length}
-                rowHeight={({index})=> 20}
+                rowHeight={({index})=> 40}
                 width={width}
                 rowRenderer={({index, key, style})=> {
                   return (

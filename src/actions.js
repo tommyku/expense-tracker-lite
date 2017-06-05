@@ -26,7 +26,7 @@ export function initHoodie({host, user, pass}) {
     });
 
     return hoodie.account.get('session').then((session)=> {
-      //hoodie.store.remove(['expense:categories', 'expense:indices', 'expense:records']).then(console.log);
+      //return hoodie.store.remove(['expense:categories', 'expense:indices', 'expense:records']).then(console.log);
       if (session) {
         dispatch(fetchRecords(hoodie));
       } else {
