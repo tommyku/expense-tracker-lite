@@ -4,6 +4,7 @@ import ColorHash from 'color-hash';
 import { Dialog, DialogType, DialogFooter } from 'office-ui-fabric-react/lib/Dialog';
 import { TextField } from 'office-ui-fabric-react/lib/TextField';
 import { PrimaryButton, DefaultButton } from 'office-ui-fabric-react/lib/Button';
+import { Category } from '../data';
 
 const ButtonStyle = {
   marginLeft: '.5em',
@@ -30,19 +31,31 @@ class CategoriesList extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      newDialog: false,
       showDialog: false,
       focusItemUuid: '',
       focusItemName: ''
     }
     this.showItemDialog = this.showItemDialog.bind(this);
+    this.showNewItemDialog= this.showNewItemDialog.bind(this);
     this.closeDialog = this.closeDialog.bind(this);
     this.closeDialogAndSave = this.closeDialogAndSave.bind(this);
+  }
+
+  showNewItemDialog() {
+    this.setState({
+      newDialog: true,
+      showDialog: true,
+      focusItemUuid: '',
+      focusItemName: '新類別'
+    })
   }
 
   showItemDialog(e) {
     const { uuid } = e.target.dataset;
     this.setState({
       showDialog: true,
+      newDialog: false,
       focusItemUuid: uuid,
       focusItemName: this.props.categories[uuid].name
     });
@@ -54,12 +67,18 @@ class CategoriesList extends Component {
 
   closeDialogAndSave() {
     this.closeDialog();
-    this.props.handleUpdateCategory({
-      category: Object.assign({},
-        this.props.categories[this.state.focusItemUuid],
-        {name: this.state.focusItemName}
-      )
-    });
+    if (this.state.newDialog) {
+      this.props.handleUpdateCategory({category: new Category({
+        name: this.state.focusItemName
+      })});
+    } else {
+      this.props.handleUpdateCategory({
+        category: Object.assign({},
+          this.props.categories[this.state.focusItemUuid],
+          {name: this.state.focusItemName}
+        )
+      });
+    }
   }
 
   render() {
@@ -74,12 +93,14 @@ class CategoriesList extends Component {
               key={key} />
           ))
         }
+        <PrimaryButton onClick={this.showNewItemDialog}
+          text='新類別' />
         <Dialog
           isOpen={this.state.showDialog}
           type={DialogType.normal}
           onDismiss={this.closeDialog}
-          title='改野'
-          isBlocking={ false }>
+          title={this.state.newDialog ? '新類別' : '改野'}
+          isBlocking={false}>
 
           <TextField
             type='text'

@@ -105,9 +105,14 @@ export function updateCategory({category}) {
 
     state.categories[updatedCategory.uuid] = updatedCategory;
 
-    const expenseCategories = Object.assign(state.categories, {_id: 'expense:categories'});
+    if (!state.indices.hasOwnProperty(updatedCategory.uuid)) {
+      state.indices[updatedCategory.uuid] = [];
+    }
 
-    return state.hoodie.store.updateOrAdd(expenseCategories)
+    const expenseCategories = Object.assign(state.categories, {_id: 'expense:categories'});
+    const expenseIndices = Object.assign(state.indices, {_id: 'expense:indices'});
+
+    return state.hoodie.store.updateOrAdd([expenseCategories, expenseIndices])
       .then(()=> dispatch(fetchRecords(state.hoodie)))
       .catch(console.warn);
   }
