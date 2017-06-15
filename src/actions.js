@@ -1,5 +1,5 @@
 import Hoodie from '@hoodie/client';
-import { Record } from './data'
+import { Record, Category } from './data'
 
 export const INIT_HOODIE = 'INIT_HOODIE';
 
@@ -9,7 +9,7 @@ export const RECEIVE_DOCS = 'RECEIVE_DOCS';
 
 export const SET_HOODIE = 'SET_HOODIE';
 
-export const FETCH_RECORDS = 'FETCH_RECORDS'
+export const FETCH_RECORDS = 'FETCH_RECORDS';
 
 export function initHoodie({host, user, pass}) {
   return function(dispatch) {
@@ -95,6 +95,21 @@ export function fetchRecords(hoodie) {
         }
         dispatch(receiveRecords(status, objects));
       })
+  }
+}
+
+export function updateCategory({category}) {
+  return function(dispatch, getState) {
+    const updatedCategory = new Category(category);
+    const state = Object.assign({}, getState());
+
+    state.categories[updatedCategory.uuid] = updatedCategory;
+
+    const expenseCategories = Object.assign(state.categories, {_id: 'expense:categories'});
+
+    return state.hoodie.store.updateOrAdd(expenseCategories)
+      .then(()=> dispatch(fetchRecords(state.hoodie)))
+      .catch(console.warn);
   }
 }
 
