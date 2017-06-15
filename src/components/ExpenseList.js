@@ -1,8 +1,27 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import timeago from 'timeago.js';
+import ColorHash from 'color-hash';
 import { Record } from '../data';
 import { List, WindowScroller, AutoSizer } from 'react-virtualized';
+
+timeago.register('zh_TW', require('timeago.js/locales/zh_TW.js'));
+
+const CategoryBaseStyle = {
+  display: 'inline-block',
+  background: '#999999',
+  fontSize: 'small',
+  color: '#ffffff',
+  padding: '0 .5em',
+
+}
+
+const DetailsStyle = {
+  whiteSpace: 'nowrap',
+  color: '#666666'
+}
+
+const colorHash = new ColorHash({lightness: 0.5, saturation: 0.5});
 
 class ExpenseList extends PureComponent {
   render() {
@@ -17,16 +36,26 @@ class ExpenseList extends PureComponent {
                 scrollTop={scrollTop}
                 height={height}
                 rowCount={records.length}
-                rowHeight={({index})=> 40}
+                rowHeight={({index})=> 70}
                 width={width}
                 rowRenderer={({index, key, style})=> {
+                  Object.assign(style, {
+                    borderBottom: '1px solid #ddd'
+                  });
+                  const CategoryStyle = Object.assign({}, CategoryBaseStyle, {
+                    backgroundColor: colorHash.hex(records[index].categoryUuid)
+                  });
                   return (
                     <div key={index} style={style}>
-                      {`
-                        You ${records[index].mode === Record.INCOME ? 'earned' : 'spent'}
-                        ${records[index].amount.toLocaleString('zh-HK', {style: 'currency', currency: records[index].currency})} on ${categories[records[index].categoryUuid].name}
-                        ${timeago().format(records[index].createdAt)}${records[index].details.length ? ' for '+records[index].details : ''}.
-                      `}
+                      <div>
+                        {`${timeago(null, 'zh_TW').format(records[index].createdAt)} ${records[index].mode === Record.INCOME ? '收入' : '支出'} ${records[index].amount.toLocaleString('zh-HK', {style: 'currency', currency: records[index].currency})}`}
+                      </div>
+                      <span style={CategoryStyle}>
+                        {categories[records[index].categoryUuid].name}
+                      </span>
+                      <div style={DetailsStyle}>
+                        {records[index].details}
+                      </div>
                     </div>
                   );
                 }}>

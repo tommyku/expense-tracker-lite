@@ -9,6 +9,15 @@ const ButtonStyle = {
   margin: '.5em',
 };
 
+const Currencies = [
+  {key: 'HKD', text: '港幣'},
+  {key: 'USD', text: '美金'},
+  {key: 'JPY', text: '日元'},
+  {key: 'RMB', text: '人民幣'},
+  {key: 'TWD', text: '臺幣'},
+
+]
+
 const FormField = (props)=> {
   const { style, ...others } = props;
   const FormFieldStyle = Object.assign(style || {}, {
@@ -63,7 +72,7 @@ class ExpenseForm extends Component {
       });
     }
     else
-      alert('buy why not a proper amount?');
+      alert('幾多呀？比個數啦大佬！');
   }
 
   handleAddOutcome() {
@@ -82,7 +91,7 @@ class ExpenseForm extends Component {
       });
     }
     else
-      alert('buy why not a proper amount?');
+      alert('幾多呀？比個數啦大佬！');
   }
 
   categoryKeyFromProps() {
@@ -110,26 +119,16 @@ class ExpenseForm extends Component {
     return (
       <section>
         <FormField>
-          <TextField
-            type='number'
-            label='Amount'
-            step='any'
-            value={this.state.amount}
-            onChanged={(amount)=> this.setState({amount})}
-          />
-        </FormField>
-        <FormField>
-          <TextField
-            type='text'
-            label='Details (Optional)'
-            autoCapitalize={false}
-            value={this.state.details}
-            onChanged={(details)=> this.setState({details})}
+          <Dropdown
+            label='貨幣'
+            onChanged={(currency)=> this.setState({currency})}
+            selectedKey={this.state.currency.key}
+            options={Currencies}
           />
         </FormField>
         <FormField>
           <Dropdown
-            label='Category'
+            label='類別'
             onChanged={(category)=> this.setState({category})}
             selectedKey={this.categoryKeyFromProps()}
             options={Object.keys(categories).map((key)=> {
@@ -138,13 +137,21 @@ class ExpenseForm extends Component {
           />
         </FormField>
         <FormField>
-          <Dropdown
-            label='Currency'
-            onChanged={(currency)=> this.setState({currency})}
-            selectedKey={this.state.currency.key}
-            options={['HKD', 'USD', 'JPY', 'RMB', 'TWD'].map((item, index)=> {
-              return {key: item, text: item};
-            })}
+          <TextField
+            type='number'
+            label='金額'
+            step='any'
+            value={this.state.amount}
+            onChanged={(amount)=> this.setState({amount})}
+          />
+        </FormField>
+        <FormField>
+          <TextField
+            type='text'
+            label='內容（唔填都得）'
+            autoCapitalize={false}
+            value={this.state.details}
+            onChanged={(details)=> this.setState({details})}
           />
         </FormField>
         <FormField style={{textAlign: 'center'}}>
@@ -152,13 +159,13 @@ class ExpenseForm extends Component {
             style={ButtonStyle}
             onClick={this.handleAddOutcome}
             type='button'>
-            Add Outcome
+            支出
           </PrimaryButton>
           <DefaultButton
             style={ButtonStyle}
             onClick={this.handleAddIncome}
             type='button'>
-            Add Income
+            收入
           </DefaultButton>
         </FormField>
       </section>
