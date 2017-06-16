@@ -25,7 +25,7 @@ class ExpenseReport extends PureComponent {
                           {this.props.categories[uuid].name}
                           {
                             Object.keys(recordsByCurrency).map((currency)=> {
-                              const amount = recordsByCurrency[currency].reduce((sum, {amount})=> sum + amount, 0)
+                              const amount = recordsByCurrency[currency].reduce((sum, {amount, mode})=> sum + amount * (mode === Record.OUTCOME ? 1 : -1), 0)
                               return (
                                 <div key={`${uuid}-${currency}`}>
                                   {amount.toLocaleString('zh-HK', {style: 'currency', currency: currency})}
