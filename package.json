@@ -5,6 +5,8 @@
   "dependencies": {
     "@hoodie/client": "^10.0.2",
     "color-hash": "^1.0.3",
+    "lodash.groupby": "^4.6.0",
+    "moment": "^2.18.1",
     "office-ui-fabric-react": "^4.3.0",
     "pouchdb-browser": "^6.2.0",
     "prop-types": "^15.5.10",
