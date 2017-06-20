@@ -2,10 +2,11 @@ import ExpenseForm from '../components/ExpenseForm'
 import { initHoodie, addNewRecord, fetchRecords } from '../actions';
 import { connect } from 'react-redux'
 
-const mapStateToProps = ({categories, hoodie})=> {
+const mapStateToProps = ({categories, hoodie, defaults})=> {
   return {
-    categories: categories,
-    hoodie: hoodie
+    categories,
+    hoodie,
+    defaults
   };
 }
 

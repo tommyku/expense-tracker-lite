@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Pivot, PivotItem, PivotLinkSize, PivotLinkFormat } from 'office-ui-fabric-react/lib/Pivot';
-import { AddTab, RecordsTab, CategoriesTab, ReportTab } from './tabs';
+import { AddTab, RecordsTab, CategoriesTab, ReportTab, SettingTab } from './tabs';
 
 const AppStyle = {
   margin: 'auto',
@@ -33,6 +33,10 @@ class App extends Component {
           <PivotItem linkText='報表'
             style={TabStyle}>
             <ReportTab />
+          </PivotItem>
+          <PivotItem linkText='設定'
+            style={TabStyle}>
+            <SettingTab />
           </PivotItem>
         </Pivot>
       </div>

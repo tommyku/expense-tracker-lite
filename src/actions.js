@@ -1,4 +1,5 @@
 import Hoodie from '@hoodie/client';
+import Store from 'store';
 import { Record, Category } from './data'
 
 export const INIT_HOODIE = 'INIT_HOODIE';
@@ -10,6 +11,8 @@ export const RECEIVE_DOCS = 'RECEIVE_DOCS';
 export const SET_HOODIE = 'SET_HOODIE';
 
 export const FETCH_RECORDS = 'FETCH_RECORDS';
+
+export const SET_DEFAULTS = 'SET_DEFAULTS';
 
 export function initHoodie({host, user, pass}) {
   return function(dispatch) {
@@ -141,4 +144,12 @@ export function addNewRecord({amount, currency, details, mode, categoryUuid}) {
       .then(()=> dispatch(fetchRecords(state.hoodie)))
       .catch(console.warn);
   };
+}
+
+export function updateDefaults(payload) {
+  Store.set('defaults', payload);
+  return {
+    type: SET_DEFAULTS,
+    payload: payload
+  }
 }

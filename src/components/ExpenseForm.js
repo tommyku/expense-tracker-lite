@@ -1,47 +1,25 @@
 import React, { Component } from 'react';
-import { Record } from '../data';
+import { Record, Currencies } from '../data';
 import { DefaultButton, PrimaryButton } from 'office-ui-fabric-react/lib/Button';
 import { Dropdown } from 'office-ui-fabric-react/lib/Dropdown';
 import { TextField } from 'office-ui-fabric-react/lib/TextField';
+import FormField from './FormField';
 import PropTypes from 'prop-types';
 
 const ButtonStyle = {
   margin: '.5em',
 };
 
-const Currencies = [
-  {key: 'HKD', text: '港幣'},
-  {key: 'USD', text: '美金'},
-  {key: 'JPY', text: '日元'},
-  {key: 'RMB', text: '人民幣'},
-  {key: 'TWD', text: '臺幣'},
-
-]
-
-const FormField = (props)=> {
-  const { style, ...others } = props;
-  const FormFieldStyle = Object.assign(style || {}, {
-    marginBottom: '1em',
-    display: 'block',
-  });
-
-  return (
-    <div style={FormFieldStyle} {...others}>
-      {props.children}
-    </div>
-  );
-};
-
-const DEFAULT_CURRENCY = 'HKD';
-
 class ExpenseForm extends Component {
   constructor(props) {
     super(props);
+    const { defaults } = this.props;
     this.state = {
-      currency: {key: DEFAULT_CURRENCY, text: DEFAULT_CURRENCY},
-      category: null,
+      currency: {key: defaults.currency, text: Currencies[defaults.currency]},
+      category: defaults.category,
       amount: '',
-      details: ''
+      details: '',
+      dirtyCategory: false
     };
     this.handleAddIncome = this.handleAddIncome.bind(this);
     this.handleAddOutcome = this.handleAddOutcome.bind(this);
@@ -105,12 +83,21 @@ class ExpenseForm extends Component {
 
   componentWillReceiveProps({categories}) {
     const categoryKeys = Object.keys(categories);
-    if (this.state.category === null || categoryKeys.indexOf(this.state.category.key) === -1) {
-      const firstCategoryKey = categoryKeys[0];
-      this.setState({category: {
-        key: firstCategoryKey,
-        text: categories[firstCategoryKey].name
-      }});
+    const shouldUseDefault = !this.state.dirtyCategory &&
+      this.props.defaults.category &&
+      categoryKeys.indexOf(this.props.defaults.category.key) !== -1;
+    if (shouldUseDefault) {
+      this.setState({
+        category: this.props.defaults.category
+      });
+    } else {
+      if (this.state.category === null || categoryKeys.indexOf(this.state.category.key) === -1) {
+        const firstCategoryKey = categoryKeys[0];
+        this.setState({category: {
+          key: firstCategoryKey,
+          text: categories[firstCategoryKey].name
+        }});
+      }
     }
   }
 
@@ -129,7 +116,7 @@ class ExpenseForm extends Component {
         <FormField>
           <Dropdown
             label='類別'
-            onChanged={(category)=> this.setState({category})}
+            onChanged={(category)=> this.setState({category, dirtyCategory: true})}
             selectedKey={this.categoryKeyFromProps()}
             options={Object.keys(categories).map((key)=> {
               return {key: categories[key].uuid, text: categories[key].name};

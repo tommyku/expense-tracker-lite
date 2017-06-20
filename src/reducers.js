@@ -1,5 +1,11 @@
+import Store from 'store';
 import { Record, Category } from './data'
-import { RECEIVE_RECORDS, SET_HOODIE, RECEIVE_DOCS } from './actions'
+import {
+  RECEIVE_RECORDS,
+  SET_HOODIE,
+  RECEIVE_DOCS,
+  SET_DEFAULTS
+} from './actions'
 
 const defaultCategories = [
   new Category({name: 'Transportation'}),
@@ -30,7 +36,11 @@ const initialState = {
   },
   categories: defaultCategoriesObject,
   records: {},
-  hoodie: null
+  hoodie: null,
+  defaults: Store.get('defaults') || {
+    currency: 'HKD',
+    category: null
+  }
 };
 
 function expenseAppLite(state = initialState, action) {
@@ -41,6 +51,8 @@ function expenseAppLite(state = initialState, action) {
       return Object.assign({}, state, {hoodie: action.hoodie});
     case RECEIVE_DOCS:
       return Object.assign({}, handleRecordsPayload(state, action.payload));
+    case SET_DEFAULTS:
+      return Object.assign({}, state, {defaults: action.payload});
     default:
       return state;
   }
