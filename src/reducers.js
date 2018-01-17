@@ -4,7 +4,8 @@ import {
   RECEIVE_RECORDS,
   SET_HOODIE,
   RECEIVE_DOCS,
-  SET_DEFAULTS
+  SET_DEFAULTS,
+  SET_HOODIE_SIGNIN
 } from './actions'
 
 const defaultCategories = [
@@ -40,6 +41,11 @@ const initialState = {
   defaults: Store.get('defaults') || {
     currency: 'HKD',
     category: null
+  },
+  hoodieSetting: {
+    host: localStorage.getItem('expenseHoodieHost') || '',
+    user: '',
+    pass: ''
   }
 };
 
@@ -53,6 +59,8 @@ function expenseAppLite(state = initialState, action) {
       return Object.assign({}, handleRecordsPayload(state, action.payload));
     case SET_DEFAULTS:
       return Object.assign({}, state, {defaults: action.payload});
+    case SET_HOODIE_SIGNIN:
+      return Object.assign({}, state, {hoodieSetting: action.payload});
     default:
       return state;
   }

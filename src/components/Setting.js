@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { PrimaryButton } from 'office-ui-fabric-react/lib/Button';
 import { Dropdown } from 'office-ui-fabric-react/lib/Dropdown';
 import { Currencies } from '../data';
+import { TextField } from 'office-ui-fabric-react/lib/TextField';
 import FormField from './FormField';
 import PropTypes from 'prop-types';
 
@@ -10,7 +11,8 @@ class Setting extends Component {
     super(props);
     this.state = {
       category: this.props.defaults.category || this.firstCategory(this.props.categories),
-      currency: this.props.defaults.currency
+      currency: this.props.defaults.currency,
+      hoodie: this.props.hoodieSetting
     }
     this.saveDefault= this.saveDefault.bind(this);
   }
@@ -39,6 +41,7 @@ class Setting extends Component {
       category: this.state.category,
       currency: this.state.currency
     });
+    this.props.handleHoodieSignIn(this.state.hoodie);
   }
 
   categoryKeyFromProps() {
@@ -70,6 +73,33 @@ class Setting extends Component {
             options={Object.keys(categories).map((key)=> {
               return {key: categories[key].uuid, text: categories[key].name};
             })}
+          />
+        </FormField>
+        <FormField>
+          <TextField
+            type='text'
+            label='伺服器地址'
+            autoCapitalize={false}
+            value={this.state.hoodie.host}
+            onChanged={(hoodieHost)=> this.setState({hoodie: Object.assign(this.state.hoodie, {host: hoodieHost})})}
+          />
+        </FormField>
+        <FormField>
+          <TextField
+            type='text'
+            label='用戶名稱'
+            autoCapitalize={false}
+            value={this.state.hoodie.user}
+            onChanged={(hoodieUser)=> this.setState({hoodie: Object.assign(this.state.hoodie, {user: hoodieUser})})}
+          />
+        </FormField>
+        <FormField>
+          <TextField
+            type='password'
+            label='用戶名稱'
+            autoCapitalize={false}
+            value={this.state.hoodie.pass}
+            onChanged={(hoodiePass)=> this.setState({hoodie: Object.assign(this.state.hoodie, {pass: hoodiePass})})}
           />
         </FormField>
         <PrimaryButton onClick={this.saveDefault}

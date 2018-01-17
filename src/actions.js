@@ -14,6 +14,8 @@ export const FETCH_RECORDS = 'FETCH_RECORDS';
 
 export const SET_DEFAULTS = 'SET_DEFAULTS';
 
+export const SET_HOODIE_SIGNIN = 'SET_HOODIE_SIGNIN';
+
 export function initHoodie({host, user, pass}) {
   return function(dispatch) {
     const hoodie = new Hoodie({
@@ -150,6 +152,16 @@ export function updateDefaults(payload) {
   Store.set('defaults', payload);
   return {
     type: SET_DEFAULTS,
+    payload: payload
+  }
+}
+
+export function updateHoodieSignIn(payload) {
+  localStorage.setItem('expenseHoodieHost', payload.host);
+  localStorage.setItem('expenseHoodieUser', payload.user);
+  localStorage.setItem('expenseHoodiePass', payload.pass);
+  return {
+    type: SET_HOODIE_SIGNIN,
     payload: payload
   }
 }

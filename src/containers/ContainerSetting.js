@@ -1,11 +1,12 @@
 import Setting from '../components/Setting';
-import { updateDefaults } from '../actions';
+import { updateDefaults, updateHoodieSignIn } from '../actions';
 import { connect } from 'react-redux';
 
-const mapStateToProps = ({categories, defaults})=> {
+const mapStateToProps = ({categories, defaults, hoodieSetting})=> {
   return {
     defaults,
-    categories
+    categories,
+    hoodieSetting
   };
 }
 
@@ -13,6 +14,9 @@ const mapDispatchToProps = (dispatch)=> {
   return {
     handleDefaultsUpdate: (payload)=> {
       dispatch(updateDefaults(payload));
+    },
+    handleHoodieSignIn: (payload)=> {
+      dispatch(updateHoodieSignIn(payload));
     }
   }
 }
